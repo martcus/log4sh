@@ -4,6 +4,9 @@
 # LOG_FILE: If log file is not defined, just echo the output
 #--------------------------------------------------------------------------------------------------
 
+LOG_APPNAME="log"
+LOG_VERSION=0.1.0
+
 # Begin Global variables
 
 # End Global variables
@@ -20,7 +23,7 @@ usage() {
 # End Help Section
 
 # Begin Logging Section
-write_log()
+log()
 {
   while read text
   do
@@ -30,17 +33,27 @@ write_log()
       fi
       # If log file is not defined, just echo the output
       if [ "$LOG_FILE" == "" ]; then
-         if [ "$1" == "" ]; then echo $LOG_TIME": $text";
-         else echo $LOG_TIME": [$1] $text"; fi
+         if [ "$1" == "" ]; then echo $LOG_TIME" $text";
+         else echo $LOG_TIME" [$1] $text"; fi
       else
         LOG=$LOG_FILE.`date +%Y%m%d`
         touch $LOG
         if [ ! -f $LOG ]; then
-          echo $LOG_TIME": [ERROR] Cannot create log file $LOG. Exiting.";
+          echo $LOG_TIME" [ERROR] Cannot create log file $LOG. Exiting.";
           exit 1;
         fi
-        echo $LOG_TIME": [$1] $text" | tee -a $LOG;
+        echo $LOG_TIME" [$1] $text" | tee -a $LOG;
       fi
   done
 }
 # End Logging Section
+
+# Begin Log commands
+LOG() { echo $1 | log; }
+
+FATAL() { echo $1 | log FATAL; }
+ERROR() { echo $1 | log ERROR; }
+WARN() { echo $1 | log WARN; }
+INFO() { echo $1 | log INFO; }
+DEBUG() { echo $1 | log DEBUG; }
+# End Log commands
