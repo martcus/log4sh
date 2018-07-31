@@ -23,37 +23,44 @@ usage() {
 # End Help Section
 
 # Begin Logging Section
-_log()
+function _log
 {
-  while read text
-  do
-      # if log date is not defined, use the format "+%Y-%m-%d %H:%M:%S
+    local level=$1
+	local text=$2
+
+    if [ ! -t 0 ]
+    then
+        pipe=$(cat)
+    else
+        pipe=""
+    fi
+
+	# if log date is not defined, use the format "+%Y-%m-%d %H:%M:%S
       if [ "$LOG_TIME" == "" ]; then
         LOG_TIME=`date "+%Y-%m-%d %H:%M:%S"`
       fi
       # If log file is not defined, just echo the output
       if [ "$LOG_FILE" == "" ]; then
-         if [ "$1" == "" ]; then echo $LOG_TIME" $text";
-         else echo $LOG_TIME" [$1] $text"; fi
+         if [ "$1" == "" ]; then echo $LOG_TIME ${level} ${text} ${pipe};
+         else echo $LOG_TIME ${level} ${text} ${pipe}; fi
       else
         LOG=$LOG_FILE.`date +%Y%m%d`
         touch $LOG
         if [ ! -f $LOG ]; then
-          echo $LOG_TIME" [ERROR] Cannot create log file $LOG. Exiting.";
+          echo $LOG_TIME" ERROR Cannot create log file $LOG. Exiting.";
           exit 1;
         fi
-        echo $LOG_TIME" [$1] $text" | tee -a $LOG;
+        echo $LOG_TIME ${level} ${text} ${pipe} | tee -a $LOG;
       fi
-  done
 }
 # End Logging Section
 
 # Begin Log commands
-LOG() { echo $1 | _log; }
+LOG() { _log "$1"; }
 
-FATAL() { echo $1 | _log FATAL; }
-ERROR() { echo $1 | _log ERROR; }
-WARN() { echo $1 | _log WARN; }
-INFO() { echo $1 | _log INFO; }
-DEBUG() { echo $1 | _log DEBUG; }
+FATAL() { _log FATAL "$1"; }
+ERROR() { _log ERROR "$1"; }
+WARN() { _log WARN "$1"; }
+INFO() { _log INFO "$1"; }
+DEBUG() { _log DEBUG "$1"; }
 # End Log commands

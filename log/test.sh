@@ -1,11 +1,9 @@
 #!/bin/bash
 source log.sh
 
-LOG_LEVEL_DEFAULT="INFO"
-	
-LOG "This is a simple test to check the write_log function"
-FATAL "fatal message"
-ERROR "error message"
-WARN  "warning message"
-INFO "info message"
-DEBUG  "debug message"
+LOG "In a rutrum purus, vitae ultrices arcu. Aenean malesuada libero nec erat finibus, sed pellentesque ipsum mollis"
+FATAL "Lorem ipsum dolor sit amet, consectetur adipiscing elit"
+ERROR "Praesent vehicula pharetra quam eget ultrices"
+WARN  "Proin eget enim elementum, molestie sem ac, gravida nibh"
+INFO "Integer purus neque, pharetra in mollis non, pretium vitae enim. Fusce vulputate lectus mi, id bibendum dolor vulputate vitae"
+DEBUG  "In ligula nunc, commodo et tincidunt ac, ullamcorper congue lorem"
