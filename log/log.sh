@@ -23,7 +23,7 @@ usage() {
 # End Help Section
 
 # Begin Logging Section
-log()
+_log()
 {
   while read text
   do
@@ -49,11 +49,11 @@ log()
 # End Logging Section
 
 # Begin Log commands
-LOG() { echo $1 | log; }
+LOG() { echo $1 | _log; }
 
-FATAL() { echo $1 | log FATAL; }
-ERROR() { echo $1 | log ERROR; }
-WARN() { echo $1 | log WARN; }
-INFO() { echo $1 | log INFO; }
-DEBUG() { echo $1 | log DEBUG; }
+FATAL() { echo $1 | _log FATAL; }
+ERROR() { echo $1 | _log ERROR; }
+WARN() { echo $1 | _log WARN; }
+INFO() { echo $1 | _log INFO; }
+DEBUG() { echo $1 | _log DEBUG; }
 # End Log commands
