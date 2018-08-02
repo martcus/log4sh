@@ -17,32 +17,27 @@ echo -e ""
 # You can use level message
 #
 TRACE  "Sed lorem leo"
-
 DEBUG  "In ligula nunc, commodo et tincidunt ac"
-
 INFO "Integer purus neque, pharetra in mollis non, pretium vitae enim"
-
 WARN  "Proin eget enim elementum, molestie sem ac"
-
 ERROR "Praesent vehicula pharetra quam eget ultrices"
-
 FATAL "Lorem ipsum dolor sit amet, consectetur adipiscing"
 
 echo -e ""
 #
 # Nested Diagnostic Context
 #
-push "Context A"
+PUSH "Context A"
 INFO "Started!"
-push "Subtask 1"
+PUSH "Subtask 1"
 INFO "Completed"
-pop
-push "Subtask 2"
+POP
+PUSH "Subtask 2"
 WARN  "Proin eget enim elementum, molestie sem ac"
 ERROR "Praesent vehicula pharetra quam eget ultrices"
-pop
+POP
 INFO "Terminated"
-pop
+POP
 INFO "Exiting"
 
 echo -e ""
@@ -51,3 +46,6 @@ echo -e ""
 #
 LOG_TIME_FMT="+%Y%m%d_%H:%M:%S%z"
 INFO "You can change the date format! WOW!"
+
+echo ">>> echo \"Pipe data have the priority\" | INFO \"it's TRUE!\""
+echo "Pipe data have the priority" | INFO "it's TRUE!"
