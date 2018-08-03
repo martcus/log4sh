@@ -6,21 +6,9 @@
 # http://github.com/martcus
 #--------------------------------------------------------------------------------------------------
 APPNAME="log"
-VERSION="1.1.0"
+VERSION="1.2.0"
 
-# Begin Help Section
-HELP_TEXT=""
-
-# This function is called in the event of an error.
-# Scripts which source this script may override by defining their own "usage" function
-usage() {
-    echo -e "${HELP_TEXT}";
-    exit 1;
-}
-# End Help Section
-
-
-# verbosity levels
+# Verbosity levels
 fatal_lvl=1
 error_lvl=2
 warning_lvl=3
@@ -28,24 +16,7 @@ info_lvl=4
 debug_lvl=5
 trace_lvl=6
 
-# Begin Context Section
-context=() # Nested Diagnostic Context
-
-function PUSH() {
-  while [ "$1" ]; do
-    context+=("$1"); shift
-  done
-}
-function POP() {
-  unset context[${#context[@]}-1]
-}
-function _join_by() {
-  local IFS="$1"; shift
-  echo "$*"
-}
-# End Context Section
-
-# Begin Logging Section
+# Internal function for logging
 function _log {
   if [ $verb_lvl -le $verbosity ]; then
 
@@ -62,7 +33,7 @@ function _log {
     LOG_FILE=${LOG_FILE:=""}
     LOG_TIME=$(date "${LOG_TIME_FMT}")
 
-    # If log file is not defined, just echo the output
+    # if log file is not defined, just echo the output
     if [ "$LOG_FILE" == "" ]; then
       _compose "${LOG_TIME}" "${level}" "${context[@]}" "${text}"
     else
@@ -78,6 +49,7 @@ function _log {
   fi
 }
 
+# Internal function for compose the log message
 function _compose() {
   local ltime=$1
   local level=$2
@@ -85,10 +57,8 @@ function _compose() {
   local text=$4
 
   if [ ! -z $level ]; then level="${level}"; fi
-#  echo -e "$(_join_by ' ' ${ltime} ${level} ${context} ${text})";
   echo -e "${ltime} ${level} ${context} ${text}";
 }
-# End Logging Section
 
 # Begin Log commands
 verb_lvl=${verb_lvl:=$info_lvl}
