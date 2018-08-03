@@ -10,7 +10,7 @@ source log.sh
 #
 # Simple message
 #
-LOG "Standard and simple log message"
+INFO "Standard log message"
 
 echo -e ""
 #
