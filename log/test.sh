@@ -5,8 +5,8 @@
 # Licensed under the GNU General Public License v3.0
 # http://github.com/martcus
 #--------------------------------------------------------------------------------------------------
+#source log.sh -d "+%Y%m%d_%H:%M:%S%z" -v TRACE
 source log.sh
-
 #
 # Simple message
 #
@@ -28,13 +28,6 @@ echo -e ""
 # Modify the date format
 #
 LOG_TIME_FMT="+%Y%m%d_%H:%M:%S%z"
-echo -e "You can change the date format! WOW!"
-TRACE  "Sed lorem leo"
-DEBUG  "In ligula nunc, commodo et tincidunt ac"
-INFO "Integer purus neque, pharetra in mollis non, pretium vitae enim"
-WARN  "Proin eget enim elementum, molestie sem ac"
-ERROR "Praesent vehicula pharetra quam eget ultrices"
-FATAL "Lorem ipsum dolor sit amet, consectetur adipiscing"
+INFO "You can change the date format! WOW!"
 
-echo -e ""
-echo "Pipe data have the priority" | INFO "it's TRUE!"
+# echo "Pipe data have the priority" | INFO "it's TRUE!"
