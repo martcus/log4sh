@@ -6,7 +6,7 @@
 # http://github.com/martcus
 #--------------------------------------------------------------------------------------------------
 APPNAME="log"
-VERSION="1.2.0"
+VERSION="1.3.0"
 
 # Verbosity levels
 fatal_lvl=1
@@ -62,9 +62,8 @@ function _compose() {
 
 # Begin Log commands
 verb_lvl=${verb_lvl:=$info_lvl}
-verbosity=${verbosity:="6"}
+verbosity=${verbosity:=$info_lvl}
 
-function LOG()   { _log "" "$@"; }
 function FATAL() { verb_lvl=$fatal_lvl   _log "FATAL  " "$@" ;}
 function ERROR() { verb_lvl=$error_lvl   _log "ERROR  " "$@" ;}
 function WARN()  { verb_lvl=$warning_lvl _log "WARNING" "$@" ;}
@@ -72,3 +71,63 @@ function INFO()  { verb_lvl=$info_lvl    _log "INFO   " "$@" ;}
 function DEBUG() { verb_lvl=$debug_lvl   _log "DEBUG  " "$@" ;}
 function TRACE() { verb_lvl=$trace_lvl   _log "TRACE  " "$@" ;}
 # End Log commands
+
+# Options command
+
+function _set_verbosity() {
+  case $1 in
+    FATAL)
+      verbosity=$fatal_lvl
+      ;;
+    ERROR)
+      verbosity=$error_lvl
+      ;;
+    WARNING)
+      verbosity=$warning_lvl
+      ;;
+    INFO)
+      verbosity=$info_lvl
+      ;;
+    DEBUG)
+      verbosity=$debug_lvl
+      ;;
+    TRACE)
+      verbosity=$trace_lvl
+      ;;
+    *)
+      echo -e "Error: $0 invalid option '$1'\nTry '$0 --help' for more information.\n"
+      exit 1
+  esac
+}
+
+OPTIND=1
+while getopts ":hd:v:f:" opt ; do
+  case $opt in
+    h)
+      echo $APPNAME $VERSION
+      echo "`basename $0` v$VERSION"
+      echo "Usage: log.sh [OPTIONS]"
+      echo " -h              : Show this help"
+      echo " -v [LEVEL]      : Define the verbosity level. "
+      echo "                   Level are: FATAL < ERROR < WARNING < INFO < DEBUG < TRACE"
+      echo " -d [DATE FORMAT]: Set the date format. Please refer to date command (man date)"
+      echo " -f [FILE NAME]  : Set the log file name"
+      ;;
+    v)
+      _set_verbosity $OPTARG
+      DEBUG "-v specified: $OPTARG mode"
+      ;;
+    d)
+      LOG_TIME_FMT=$OPTARG
+      DEBUG "-d specified: $OPTARG date format set"
+      ;;
+    f)
+      LOG_FILE=$OPTARG
+      DEBUG "-f specified: $OPTARG log file"
+      ;;
+    *)
+      echo -e "Error: $0 invalid option '$1'\nTry '$0 -h' for more information.\n"
+      exit 1
+  esac
+done
+
