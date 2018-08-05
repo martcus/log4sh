@@ -1,4 +1,4 @@
 # bashutil
 
-## write_log
+## log4.sh
 Makes logging in Bash scripting suck less
