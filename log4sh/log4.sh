@@ -1,12 +1,12 @@
-#!/bin/bash
+#!/usr/bin/env bash
 #--------------------------------------------------------------------------------------------------
 # Makes logging in Bash scripting simple
 # Copyright (c) Marco Lovazzano
 # Licensed under the GNU General Public License v3.0
 # http://github.com/martcus
 #--------------------------------------------------------------------------------------------------
-APPNAME="log"
-VERSION="1.3.0"
+APPNAME="log4sh"
+VERSION="2.0.0"
 
 # Verbosity levels
 fatal_lvl=1
@@ -54,7 +54,7 @@ function _compose() {
   local ltime=$1
   local level=$2
   local context=$3
-  local text=$4
+  local text=${4:-}
 
   if [ ! -z $level ]; then level="${level}"; fi
   echo -e "${ltime} ${level} ${context} ${text}";
@@ -73,7 +73,6 @@ function TRACE() { verb_lvl=$trace_lvl   _log "TRACE  " "$@" ;}
 # End Log commands
 
 # Options command
-
 function _set_verbosity() {
   case $1 in
     FATAL)
@@ -104,14 +103,13 @@ OPTIND=1
 while getopts ":hd:v:f:" opt ; do
   case $opt in
     h)
-      echo $APPNAME $VERSION
-      echo "`basename $0` v$VERSION"
-      echo "Usage: log.sh [OPTIONS]"
-      echo " -h              : Show this help"
-      echo " -v [LEVEL]      : Define the verbosity level. "
-      echo "                   Level are: FATAL < ERROR < WARNING < INFO < DEBUG < TRACE"
-      echo " -d [DATE FORMAT]: Set the date format. Please refer to date command (man date)"
-      echo " -f [FILE NAME]  : Set the log file name"
+      echo -e "`basename $0` v$VERSION"
+      echo -e "Usage: log4.sh [OPTIONS]"
+      echo -e " -h              : Show this help"
+      echo -e " -v [LEVEL]      : Define the verbosity level. "
+      echo -e "                   Level are: FATAL < ERROR < WARNING < INFO < DEBUG < TRACE"
+      echo -e " -d [DATE FORMAT]: Set the date format. Please refer to date command (man date)"
+      echo -e " -f [FILE NAME]  : Set the log file name"
       ;;
     v)
       _set_verbosity $OPTARG
@@ -126,7 +124,8 @@ while getopts ":hd:v:f:" opt ; do
       DEBUG "-f specified: $OPTARG log file"
       ;;
     *)
-      echo -e "Error: $0 invalid option '$1'\nTry '$0 -h' for more information.\n"
+      echo -e "Error: $0 invalid option '$1'."
+      echo -e "Try '$0 -h' for more information."
       exit 1
   esac
 done
