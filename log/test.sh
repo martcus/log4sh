@@ -6,7 +6,7 @@
 # http://github.com/martcus
 #--------------------------------------------------------------------------------------------------
 #source log.sh -d "+%Y%m%d_%H:%M:%S%z" -v TRACE
-source log.sh
+source log.sh -f prova
 #
 # Simple message
 #

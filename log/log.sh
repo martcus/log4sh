@@ -101,15 +101,17 @@ function _set_verbosity() {
 }
 
 OPTIND=1
-while getopts ":hd:v:" opt ; do
+while getopts ":hd:v:f:" opt ; do
   case $opt in
     h)
       echo $APPNAME $VERSION
       echo "`basename $0` v$VERSION"
       echo "Usage: log.sh [OPTIONS]"
-      echo " -h              : help"
-      echo " -v [LEVEL]      : define the verbosity level"
-      echo " -d [DATE FORMAT]: define the date format"
+      echo " -h              : Show this help"
+      echo " -v [LEVEL]      : Define the verbosity level. "
+      echo "                   Level are: FATAL < ERROR < WARNING < INFO < DEBUG < TRACE"
+      echo " -d [DATE FORMAT]: Set the date format. Please refer to date command (man date)"
+      echo " -f [FILE NAME]  : Set the log file name"
       ;;
     v)
       _set_verbosity $OPTARG
@@ -117,7 +119,11 @@ while getopts ":hd:v:" opt ; do
       ;;
     d)
       LOG_TIME_FMT=$OPTARG
-      echo "OPT="$OPTARG "FMT="$LOG_TIME_FMT
+      DEBUG "-d specified: $OPTARG date format set"
+      ;;
+    f)
+      LOG_FILE=$OPTARG
+      DEBUG "-f specified: $OPTARG log file"
       ;;
     *)
       echo -e "Error: $0 invalid option '$1'\nTry '$0 -h' for more information.\n"
