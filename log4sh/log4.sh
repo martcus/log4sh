@@ -100,7 +100,8 @@ function _set_verbosity() {
 function usage() {
   echo -e "`basename $0` v$VERSION"
   echo -e "Usage: log4.sh [OPTIONS]"
-  echo -e " -h              : Show this help"
+  echo -e " -h | --help     : Print this help"
+  echo -e " --version       : Print version"
   echo -e " -v [LEVEL]      : Define the verbosity level. "
   echo -e "                   Level are: FATAL < ERROR < WARNING < INFO < DEBUG < TRACE"
   echo -e " -d [DATE FORMAT]: Set the date format. Refer to date command (man date)"
@@ -111,41 +112,50 @@ function usage() {
   echo -e " 1  if some problems (e.g., cannot access subdirectory)."
 }
 
-OPTIND=1
-while getopts ":hd:v:f:V" opt ; do
-  case $opt in
-    h) #Help section
+PARSED_OPTIONS=$(getopt -o :hd:v:f:V --long "help,version,verbosity:,file:,dformat:"  -n 'parse-options' -- "$@")
+ 
+#Bad arguments, something has gone wrong with the getopt command.
+if [ $? -ne 0 ]; then
+  #Option not allowed
+  echo -e "Error: '$0' invalid option '$1'."
+  echo -e "Try '$0 -h' for more information."
+  exit 1
+fi
+
+# A little magic, necessary when using getopt.
+eval set -- "$PARSED_OPTIONS"
+
+while true; do
+  case "$1" in
+    -h|--help)
       usage
-      exit 0
-      ;;
-    v) #Verbosity
-      _set_verbosity $OPTARG
-      DEBUG "-v specified: '$OPTARG' mode"
-      ;;
-    d) #Date format
-	  date "$OPTARG" > /dev/null 2>&1
+      shift;;
+    -v|--verbosity) #Verbosity
+      _set_verbosity "$2"
+      DEBUG "-v specified: '$1' mode"
+	  shift 2;;
+    -d|--dformat) #Date format
+	  date "$2" > /dev/null 2>&1
 	  if [ ! $? -eq 0 ]; then
-	    echo "Error: '$0' '-d $OPTARG' is not a valid date format. Refer to date command (man date)"
+	    echo "Error: '$0' '-d $2' is not a valid date format. Refer to date command (man date)"
 		exit 1
       fi
-      LOG_TIME_FMT=$OPTARG
-      DEBUG "-d specified: '$OPTARG' date format"
-      ;;
-    f) #Print to file
-      LOG_FILE=$OPTARG
-      DEBUG "-f specified: '$OPTARG' log file"
-      ;;
-	V)
+      LOG_TIME_FMT=$2
+      DEBUG "-d specified: '$2' date format"
+	  shift 2;;
+    -f|--file) #Print to file
+      LOG_FILE=$2
+      DEBUG "-f specified: '$2' log file"
+	  shift 2;;
+    --version)
 	  echo -e "`basename $0` v$VERSION"
 	  echo -e "Makes logging in Bash scripting simple"
 	  echo -e "Copyright (c) Marco Lovazzano"
 	  echo -e "Licensed under the GNU General Public License v3.0"
 	  echo -e "http://github.com/martcus"
-	  ;;
-    *) #Option not allowed
-      echo -e "Error: '$0' invalid option '$1'."
-      echo -e "Try '$0 -h' for more information."
-      exit 1
+     shift;;
+    --)
+      shift
+      break;;
   esac
 done
-
