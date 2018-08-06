@@ -6,8 +6,6 @@
 # http://github.com/martcus
 #--------------------------------------------------------------------------------------------------
 
-source log4.sh -v INFO -d "+%Y-%m-%d %H:%M:%S" -f $0
-
 # Exit on error. Append "|| true" if you expect an error.
 set -o errexit
 # Exit on error inside any functions or subshells.
@@ -25,5 +23,15 @@ __file="${__dir}/$(basename "${BASH_SOURCE[0]}")"
 __base="$(basename ${__file} .sh)"
 __root="$(cd "$(dirname "${__dir}")" && pwd)" # <-- change this as it depends on your app
 
+# log4.sh inclusion
+source log4.sh -v DEBUG -d "+%Y-%m-%d %H:%M:%S"
+# use -f $__file for log
+
+DEBUG "__dir  = "$__dir
+DEBUG "__file = "$__file
+DEBUG "__base = "$__base
+DEBUG "__root = "$__root
+
 # --> Some script here
 INFO "Hello World!"
+
