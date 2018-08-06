@@ -35,7 +35,6 @@ function _log {
       fi
       _compose "${LOG_TIME}" "${level}" "${context[@]}" "${text}" | tee -a $LOG;
     fi
-
   fi
 }
 
@@ -50,7 +49,6 @@ function _compose() {
 }
 
 # Begin Log commands
-
 ## Verbosity levels
 fatal_lvl=1
 error_lvl=2
@@ -73,24 +71,12 @@ function TRACE() { verb_lvl=$trace_lvl   _log "TRACE  " "$@" ;}
 # Options command
 function _set_verbosity() {
   case $1 in
-    FATAL)
-      verbosity=$fatal_lvl
-      ;;
-    ERROR)
-      verbosity=$error_lvl
-      ;;
-    WARNING)
-      verbosity=$warning_lvl
-      ;;
-    INFO)
-      verbosity=$info_lvl
-      ;;
-    DEBUG)
-      verbosity=$debug_lvl
-      ;;
-    TRACE)
-      verbosity=$trace_lvl
-      ;;
+    FATAL)   verbosity=$fatal_lvl   ;;
+    ERROR)   verbosity=$error_lvl   ;;
+    WARNING) verbosity=$warning_lvl ;;
+    INFO)    verbosity=$info_lvl    ;;
+    DEBUG)   verbosity=$debug_lvl   ;;
+    TRACE)   verbosity=$trace_lvl   ;;
     *)
       echo -e "Error: $0 invalid option '$1'\nTry '$0 --help' for more information.\n"
       exit 1
@@ -100,20 +86,20 @@ function _set_verbosity() {
 function usage() {
   echo -e "`basename $0` v$VERSION"
   echo -e "Usage: log4.sh [OPTIONS]"
-  echo -e " -h | --help     : Print this help"
-  echo -e " --version       : Print version"
-  echo -e " -v [LEVEL]      : Define the verbosity level. "
-  echo -e "                   Level are: FATAL < ERROR < WARNING < INFO < DEBUG < TRACE"
-  echo -e " -d [DATE FORMAT]: Set the date format. Refer to date command (man date)"
-  echo -e " -f [FILE NAME]  : Set the log file name"
+  echo -e " -h , --help                    : Print this help"
+  echo -e " -v , --verbosity [LEVEL]       : Define the verbosity level. "
+  echo -e "                                  Level are: FATAL < ERROR < WARNING < INFO < DEBUG < TRACE"
+  echo -e " -d , --dateformat [DATE FORMAT]: Set the date format. Refer to date command (man date)"
+  echo -e " -f , --file [FILE NAME]        : Set the log file name"
+  echo -e "      --version                 : Print version"
   echo -e ""
   echo -e "Exit status:"
   echo -e " 0  if OK,"
   echo -e " 1  if some problems (e.g., cannot access subdirectory)."
 }
 
-PARSED_OPTIONS=$(getopt -o :hd:v:f:V --long "help,version,verbosity:,file:,dformat:"  -n 'parse-options' -- "$@")
- 
+OPTS=$(getopt -o :d:v:f:h --long "help,version,verbosity:,file:,dateformat:"  -n 'parse-options' -- "$@")
+
 #Bad arguments, something has gone wrong with the getopt command.
 if [ $? -ne 0 ]; then
   #Option not allowed
@@ -123,30 +109,13 @@ if [ $? -ne 0 ]; then
 fi
 
 # A little magic, necessary when using getopt.
-eval set -- "$PARSED_OPTIONS"
+eval set -- "$OPTS"
 
 while true; do
   case "$1" in
     -h|--help)
       usage
       shift;;
-    -v|--verbosity) #Verbosity
-      _set_verbosity "$2"
-      DEBUG "-v specified: '$1' mode"
-	  shift 2;;
-    -d|--dformat) #Date format
-	  date "$2" > /dev/null 2>&1
-	  if [ ! $? -eq 0 ]; then
-	    echo "Error: '$0' '-d $2' is not a valid date format. Refer to date command (man date)"
-		exit 1
-      fi
-      LOG_TIME_FMT=$2
-      DEBUG "-d specified: '$2' date format"
-	  shift 2;;
-    -f|--file) #Print to file
-      LOG_FILE=$2
-      DEBUG "-f specified: '$2' log file"
-	  shift 2;;
     --version)
 	  echo -e "`basename $0` v$VERSION"
 	  echo -e "Makes logging in Bash scripting simple"
@@ -154,6 +123,20 @@ while true; do
 	  echo -e "Licensed under the GNU General Public License v3.0"
 	  echo -e "http://github.com/martcus"
      shift;;
+    -v|--verbosity) #Verbosity
+      _set_verbosity "$2"
+       shift 2;;
+    -d|--dateformat) #Date format
+	  date "$2" > /dev/null 2>&1
+	  if [ ! $? -eq 0 ]; then
+	    echo "Error: '$0' '-d $2' is not a valid date format. Refer to date command (man date)"
+		exit 1
+      fi
+      LOG_TIME_FMT=$2
+      shift 2;;
+    -f|--file) #Print to file
+      LOG_FILE=$2
+       shift 2;;
     --)
       shift
       break;;
