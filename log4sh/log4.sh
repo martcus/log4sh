@@ -11,20 +11,17 @@ VERSION="2.0.0"
 # Internal function for logging
 function _log {
   if [ $verb_lvl -le $verbosity ]; then
-
     local level=${1:-}
     local text=${2:-}
-    local pipe=
 
     if [ ! -t 0 ]; then
-      pipe=$(cat)
-	  text=${pipe}" "${text}
+	  text=$(cat)" "${text}
     fi
 
     # if log date format is not defined, use the format "+%Y-%m-%d %H:%M:%S
     LOG_TIME_FMT=${LOG_TIME_FMT:="+%Y-%m-%d %H:%M:%S"}
     LOG_TIME=$(date "${LOG_TIME_FMT}")
-	LOG_FILE=${LOG_FILE:=""}
+    LOG_FILE=${LOG_FILE:=""}
 
     # if log file is not defined, just echo the output
     if [ -z "$LOG_FILE" ]; then
@@ -100,21 +97,26 @@ function _set_verbosity() {
   esac
 }
 
+function usage() {
+  echo -e "`basename $0` v$VERSION"
+  echo -e "Usage: log4.sh [OPTIONS]"
+  echo -e " -h              : Show this help"
+  echo -e " -v [LEVEL]      : Define the verbosity level. "
+  echo -e "                   Level are: FATAL < ERROR < WARNING < INFO < DEBUG < TRACE"
+  echo -e " -d [DATE FORMAT]: Set the date format. Refer to date command (man date)"
+  echo -e " -f [FILE NAME]  : Set the log file name"
+  echo -e ""
+  echo -e "Exit status:"
+  echo -e " 0  if OK,"
+  echo -e " 1  if some problems (e.g., cannot access subdirectory)."
+}
+
 OPTIND=1
 while getopts ":hd:v:f:V" opt ; do
   case $opt in
     h) #Help section
-      echo -e "`basename $0` v$VERSION"
-      echo -e "Usage: log4.sh [OPTIONS]"
-      echo -e " -h              : Show this help"
-      echo -e " -v [LEVEL]      : Define the verbosity level. "
-      echo -e "                   Level are: FATAL < ERROR < WARNING < INFO < DEBUG < TRACE"
-      echo -e " -d [DATE FORMAT]: Set the date format. Refer to date command (man date)"
-      echo -e " -f [FILE NAME]  : Set the log file name"
-	  echo -e ""
-	  echo -e "Exit status:"
-	  echo -e " 0  if OK,"
-      echo -e " 1  if some problems (e.g., cannot access subdirectory)."
+      usage
+      exit 0
       ;;
     v) #Verbosity
       _set_verbosity $OPTARG
