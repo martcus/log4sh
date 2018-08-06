@@ -8,33 +8,26 @@
 APPNAME="log4sh"
 VERSION="2.0.0"
 
-# Verbosity levels
-fatal_lvl=1
-error_lvl=2
-warning_lvl=3
-info_lvl=4
-debug_lvl=5
-trace_lvl=6
-
 # Internal function for logging
 function _log {
   if [ $verb_lvl -le $verbosity ]; then
 
-    local level=$1
-    local text=$2
+    local level=${1:-}
+    local text=${2:-}
     local pipe=
 
     if [ ! -t 0 ]; then
-      text=$(cat)
+      pipe=$(cat)
+	  text=${pipe}" "${text}
     fi
 
     # if log date format is not defined, use the format "+%Y-%m-%d %H:%M:%S
     LOG_TIME_FMT=${LOG_TIME_FMT:="+%Y-%m-%d %H:%M:%S"}
-    LOG_FILE=${LOG_FILE:=""}
     LOG_TIME=$(date "${LOG_TIME_FMT}")
+	LOG_FILE=${LOG_FILE:=""}
 
     # if log file is not defined, just echo the output
-    if [ "$LOG_FILE" == "" ]; then
+    if [ -z "$LOG_FILE" ]; then
       _compose "${LOG_TIME}" "${level}" "${context[@]}" "${text}"
     else
       LOG=$LOG_FILE.`date +%Y%m%d`
@@ -51,16 +44,24 @@ function _log {
 
 # Internal function for compose the log message
 function _compose() {
-  local ltime=$1
-  local level=$2
-  local context=$3
+  local ltime=${1:-}
+  local level=${2:-}
+  local context=${3:-}
   local text=${4:-}
 
-  if [ ! -z $level ]; then level="${level}"; fi
   echo -e "${ltime} ${level} ${context} ${text}";
 }
 
 # Begin Log commands
+
+## Verbosity levels
+fatal_lvl=1
+error_lvl=2
+warning_lvl=3
+info_lvl=4
+debug_lvl=5
+trace_lvl=6
+
 verb_lvl=${verb_lvl:=$info_lvl}
 verbosity=${verbosity:=$info_lvl}
 
@@ -100,31 +101,47 @@ function _set_verbosity() {
 }
 
 OPTIND=1
-while getopts ":hd:v:f:" opt ; do
+while getopts ":hd:v:f:V" opt ; do
   case $opt in
-    h)
+    h) #Help section
       echo -e "`basename $0` v$VERSION"
       echo -e "Usage: log4.sh [OPTIONS]"
       echo -e " -h              : Show this help"
       echo -e " -v [LEVEL]      : Define the verbosity level. "
       echo -e "                   Level are: FATAL < ERROR < WARNING < INFO < DEBUG < TRACE"
-      echo -e " -d [DATE FORMAT]: Set the date format. Please refer to date command (man date)"
+      echo -e " -d [DATE FORMAT]: Set the date format. Refer to date command (man date)"
       echo -e " -f [FILE NAME]  : Set the log file name"
+	  echo -e ""
+	  echo -e "Exit status:"
+	  echo -e " 0  if OK,"
+      echo -e " 1  if some problems (e.g., cannot access subdirectory)."
       ;;
-    v)
+    v) #Verbosity
       _set_verbosity $OPTARG
-      DEBUG "-v specified: $OPTARG mode"
+      DEBUG "-v specified: '$OPTARG' mode"
       ;;
-    d)
+    d) #Date format
+	  date "$OPTARG" > /dev/null 2>&1
+	  if [ ! $? -eq 0 ]; then
+	    echo "Error: '$0' '-d $OPTARG' is not a valid date format. Refer to date command (man date)"
+		exit 1
+      fi
       LOG_TIME_FMT=$OPTARG
-      DEBUG "-d specified: $OPTARG date format set"
+      DEBUG "-d specified: '$OPTARG' date format"
       ;;
-    f)
+    f) #Print to file
       LOG_FILE=$OPTARG
-      DEBUG "-f specified: $OPTARG log file"
+      DEBUG "-f specified: '$OPTARG' log file"
       ;;
-    *)
-      echo -e "Error: $0 invalid option '$1'."
+	V)
+	  echo -e "`basename $0` v$VERSION"
+	  echo -e "Makes logging in Bash scripting simple"
+	  echo -e "Copyright (c) Marco Lovazzano"
+	  echo -e "Licensed under the GNU General Public License v3.0"
+	  echo -e "http://github.com/martcus"
+	  ;;
+    *) #Option not allowed
+      echo -e "Error: '$0' invalid option '$1'."
       echo -e "Try '$0 -h' for more information."
       exit 1
   esac

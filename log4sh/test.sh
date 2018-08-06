@@ -5,8 +5,7 @@
 # Licensed under the GNU General Public License v3.0
 # http://github.com/martcus
 #--------------------------------------------------------------------------------------------------
-#source log.sh -d "+%Y%m%d_%H:%M:%S%z" -v TRACE
-source log4.sh -f $0
+source log4.sh -d +"%Y-%m-%d %H:%M:%S" -v TRACE
 
 #
 # Simple message
@@ -31,4 +30,4 @@ echo -e ""
 LOG_TIME_FMT="+%Y%m%d_%H:%M:%S%z"
 INFO "You can change the date format! WOW!"
 
-# echo "Pipe data have the priority" | INFO "it's TRUE!"
+echo "Pipe data have the priority" | INFO "it's TRUE!"

@@ -6,7 +6,7 @@
 # http://github.com/martcus
 #--------------------------------------------------------------------------------------------------
 
-source log4.sh -v INFO -d "+%Y%m%d_%H:%M:%S%z" -f $0
+source log4.sh -v INFO -d "+%Y-%m-%d %H:%M:%S" -f $0
 
 # Exit on error. Append "|| true" if you expect an error.
 set -o errexit
@@ -19,4 +19,11 @@ set -o pipefail
 # Turn on traces, useful while debugging but commented out by default
 # set -o xtrace
 
-# ----> Some script here
+# Set magic variables for current file & dir
+__dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+__file="${__dir}/$(basename "${BASH_SOURCE[0]}")"
+__base="$(basename ${__file} .sh)"
+__root="$(cd "$(dirname "${__dir}")" && pwd)" # <-- change this as it depends on your app
+
+# --> Some script here
+INFO "Hello World!"
