@@ -24,8 +24,7 @@ __base="$(basename ${__file} .sh)"
 __root="$(cd "$(dirname "${__dir}")" && pwd)" # <-- change this as it depends on your app
 
 # log4.sh inclusion
-source log4.sh -v INFO -d "+%Y-%m-%d %H:%M:%S"
-# use -f $__file for log
+source log4.sh -v INFO -d "+%Y-%m-%d %H:%M:%S" # use -f $__file for log
 
 DEBUG "__dir  = "$__dir
 DEBUG "__file = "$__file
@@ -34,4 +33,3 @@ DEBUG "__root = "$__root
 
 # --> Some script here
 INFO "Hello World!"
-

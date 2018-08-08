@@ -27,7 +27,7 @@ function _log {
     if [ -z "$LOG_FILE" ]; then
       _compose "${LOG_TIME}" "${level}" "${context[@]}" "${text}"
     else
-      LOG=$LOG_FILE.`date +%Y%m%d`
+      LOG=$LOG_FILE.$(date +%Y%m%d)
       touch $LOG
       if [ ! -f $LOG ]; then
         _compose "${LOG_TIME}" "FATAL" "${context[@]}" "Cannot create log file $LOG. Exiting."
