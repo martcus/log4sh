@@ -5,7 +5,7 @@
 # Licensed under the GNU General Public License v3.0
 # http://github.com/martcus
 #--------------------------------------------------------------------------------------------------
-source log4.sh -d +"%Y-%m-%d %H:%M:%S" -v TRACE
+source ../script/log4.sh -d +"%Y-%m-%d %H:%M:%S" -v TRACE
 
 #
 # Simple message
