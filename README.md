@@ -1,4 +1,2 @@
-# bashutil
-
-## log4.sh
-Makes logging in Bash scripting suck less
+# log4.sh
+Makes logging in Bash scripting easy
