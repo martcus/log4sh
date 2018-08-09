@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #--------------------------------------------------------------------------------------------------
-# Makes logging in Bash scripting simple
+# Template script
 # Copyright (c) Marco Lovazzano
 # Licensed under the GNU General Public License v3.0
 # http://github.com/martcus
@@ -16,6 +16,10 @@ set -o nounset
 set -o pipefail
 # Turn on traces, useful while debugging but commented out by default
 # set -o xtrace
+
+# IFS stands for "internal field separator". It is used by the shell to determine how to do word splitting, i. e. how to recognize word boundaries.
+SAVEIFS=$IFS
+IFS=$(echo -en "\n\b") # <-- change this as it depends on your app
 
 # Set magic variables for current file & dir
 __dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -33,3 +37,7 @@ DEBUG "__root = "$__root
 
 # --> Some script here
 INFO "Hello World!"
+
+# Restore IFS
+IFS=$SAVEIFS
+exit 0
