@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #--------------------------------------------------------------------------------------------------
-# Makes logging in Bash scripting simple
+# Makes logging in Bash scripting easy
 # Copyright (c) Marco Lovazzano
 # Licensed under the GNU General Public License v3.0
 # http://github.com/martcus
