@@ -5,8 +5,8 @@
 # Licensed under the GNU General Public License v3.0
 # http://github.com/martcus
 #--------------------------------------------------------------------------------------------------
-APPNAME="log4sh"
-VERSION="2.0.0"
+LOG4SH_APPNAME="log4sh"
+LOG4SH_VERSION="2.0.1"
 
 # Internal function for logging
 function _log {
@@ -84,7 +84,7 @@ function _set_verbosity() {
 }
 
 function usage() {
-  echo -e "`basename $0` v$VERSION"
+  echo -e "`basename $0` v$LOG4SH_VERSION"
   echo -e "Usage: log4.sh [OPTIONS]"
   echo -e " -h , --help                    : Print this help"
   echo -e " -v , --verbosity [LEVEL]       : Define the verbosity level. "
@@ -117,15 +117,15 @@ while true; do
       usage
       shift;;
     --version)
-	  echo -e "`basename $0` v$VERSION"
+	  echo -e "`basename $0` v$LOG4SH_VERSION"
 	  echo -e "Makes logging in Bash scripting simple"
 	  echo -e "Copyright (c) Marco Lovazzano"
 	  echo -e "Licensed under the GNU General Public License v3.0"
 	  echo -e "http://github.com/martcus"
-     shift;;
+      shift;;
     -v|--verbosity) #Verbosity
       _set_verbosity "$2"
-       shift 2;;
+      shift 2;;
     -d|--dateformat) #Date format
 	  date "$2" > /dev/null 2>&1
 	  if [ ! $? -eq 0 ]; then
@@ -136,7 +136,7 @@ while true; do
       shift 2;;
     -f|--file) #Print to file
       LOG_FILE=$2
-       shift 2;;
+      shift 2;;
     --)
       shift
       break;;
