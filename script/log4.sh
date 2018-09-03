@@ -98,7 +98,7 @@ function usage() {
   echo -e " 1  if some problems (e.g., cannot access subdirectory)."
 }
 
-OPTS=$(getopt -o :d:v:f:h --long "help,version,verbosity:,file:,dateformat:"  -n 'parse-options' -- "$@")
+OPTS=$(getopt -o :d:v:f:h --long "help,version,verbosity:,file:,dateformat:" -n $LOG4SH_APPNAME -- "$@")
 
 #Bad arguments, something has gone wrong with the getopt command.
 if [ $? -ne 0 ]; then
