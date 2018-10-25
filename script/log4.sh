@@ -6,7 +6,7 @@
 # http://github.com/martcus
 #--------------------------------------------------------------------------------------------------
 LOG4SH_APPNAME="log4sh"
-LOG4SH_VERSION="2.0.2"
+LOG4SH_VERSION="2.1.0"
 
 # Internal function for logging
 function _log {
@@ -48,8 +48,8 @@ function _compose() {
     echo -e "${ltime} ${level} ${context} ${text}";
 }
 
-# Begin Log commands
-## Verbosity levels
+# Log function and verbosity levels
+off_lvl=0
 fatal_lvl=1
 error_lvl=2
 warning_lvl=3
@@ -60,17 +60,18 @@ trace_lvl=6
 verb_lvl=${verb_lvl:=$info_lvl}
 verbosity=${verbosity:=$info_lvl}
 
-function FATAL() { verb_lvl=$fatal_lvl   _log "FATAL  " "$@" ;}
-function ERROR() { verb_lvl=$error_lvl   _log "ERROR  " "$@" ;}
-function WARN()  { verb_lvl=$warning_lvl _log "WARNING" "$@" ;}
-function INFO()  { verb_lvl=$info_lvl    _log "INFO   " "$@" ;}
-function DEBUG() { verb_lvl=$debug_lvl   _log "DEBUG  " "$@" ;}
-function TRACE() { verb_lvl=$trace_lvl   _log "TRACE  " "$@" ;}
-# End Log commands
+function FATAL()  { verb_lvl=$fatal_lvl   _log "FATAL" "$@" ;}
+function ERROR()  { verb_lvl=$error_lvl   _log "ERROR" "$@" ;}
+function WARN()   { verb_lvl=$warning_lvl _log "WARN " "$@" ;}
+function INFO()   { verb_lvl=$info_lvl    _log "INFO " "$@" ;}
+function DEBUG()  { verb_lvl=$debug_lvl   _log "DEBUG" "$@" ;}
+function TRACE()  { verb_lvl=$trace_lvl   _log "TRACE" "$@" ;}
+function SET_LEVEL() { _set_verbosity "$1" ;}
 
 # Options command
 function _set_verbosity() {
     case $1 in
+        OFF)     verbosity=$off_lvl     ;;
         FATAL)   verbosity=$fatal_lvl   ;;
         ERROR)   verbosity=$error_lvl   ;;
         WARNING) verbosity=$warning_lvl ;;
@@ -78,14 +79,15 @@ function _set_verbosity() {
         DEBUG)   verbosity=$debug_lvl   ;;
         TRACE)   verbosity=$trace_lvl   ;;
         *)
-            echo -e "Error: $0 invalid option '$1'\nTry '$0 --help' for more information.\n"
-            exit 1
+			echo -e "Error: '$0' invalid option '$1'."
+			echo -e "Try '$0 -h' for more information."
+			exit 1
     esac
 }
 
 function _usage() {
     echo -e "$(basename $0) v$LOG4SH_VERSION"
-    echo -e "Usage: log4.sh [OPTIONS]"
+    echo -e "Usage: $(basename $0) [OPTIONS]"
     echo -e " -h , --help                    : Print this help"
     echo -e " -v , --verbosity [LEVEL]       : Define the verbosity level. "
     echo -e "                                  Levels are: FATAL < ERROR < WARNING < INFO < DEBUG < TRACE"
@@ -100,7 +102,7 @@ function _usage() {
 
 function _version() {
     echo -e "$(basename $0) v$LOG4SH_VERSION"
-    echo -e "Makes logging in Bash scripting simple"
+    echo -e "Makes logging in Bash scripting smart"
     echo -e "Copyright (c) Marco Lovazzano"
     echo -e "Licensed under the GNU General Public License v3.0"
     echo -e "http://github.com/martcus"
@@ -111,8 +113,8 @@ OPTS=$(getopt -o :d:v:f:h --long "help,version,verbosity:,file:,dateformat:" -n 
 #Bad arguments, something has gone wrong with the getopt command.
 if [ $? -ne 0 ]; then
     #Option not allowed
-    echo -e "Error: '$0' invalid option '$1'."
-    echo -e "Try '$0 -h' for more information."
+    echo -e "Error: '$(basename $0)' invalid option '$1'."
+    echo -e "Try '$(basename $0) -h' for more information."
     exit 1
 fi
 
