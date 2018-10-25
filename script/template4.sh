@@ -35,6 +35,8 @@ DEBUG "__file = "$__file
 DEBUG "__base = "$__base
 DEBUG "__root = "$__root
 
+# --> function
+
 # --> Some script here
 INFO "Hello World!"
 
