@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 #--------------------------------------------------------------------------------------------------
-# Makes logging in Bash scripting easy
+# Makes logging in Bash scripting smart
 # Copyright (c) Marco Lovazzano
 # Licensed under the GNU General Public License v3.0
 # http://github.com/martcus
 #--------------------------------------------------------------------------------------------------
 LOG4SH_APPNAME="log4sh"
-LOG4SH_VERSION="2.1.0"
+LOG4SH_VERSION="2.1.1"
 
 # Internal function for logging
 function _log {
@@ -86,26 +86,30 @@ function _set_verbosity() {
 }
 
 function _usage() {
+    echo -e ""
     echo -e "$(basename $0) v$LOG4SH_VERSION"
     echo -e "Usage: $(basename $0) [OPTIONS]"
-    echo -e " -h , --help                    : Print this help"
-    echo -e " -v , --verbosity [LEVEL]       : Define the verbosity level. "
-    echo -e "                                  Levels are: FATAL < ERROR < WARNING < INFO < DEBUG < TRACE"
-    echo -e " -d , --dateformat [DATE FORMAT]: Set the date format. Refer to date command (man date)"
-    echo -e " -f , --file [FILE NAME]        : Set the log file name"
-    echo -e "      --version                 : Print version"
+    echo -e " -h , --help                     : Print this help"
+    echo -e " -v , --verbosity [LEVEL]        : Define the verbosity level. "
+    echo -e "                                   Levels are: FATAL < ERROR < WARNING < INFO < DEBUG < TRACE | OFF"
+    echo -e " -d , --dateformat [DATE FORMAT] : Set the date format. Refer to date command (man date)"
+    echo -e " -f , --file [FILE NAME]         : Set the log file name"
+    echo -e "      --version                  : Print version"
     echo -e ""
     echo -e "Exit status:"
     echo -e " 0  if OK,"
     echo -e " 1  if some problems (e.g., cannot access subdirectory)."
+    echo -e ""
 }
 
 function _version() {
+    echo -e ""
     echo -e "$(basename $0) v$LOG4SH_VERSION"
     echo -e "Makes logging in Bash scripting smart"
     echo -e "Copyright (c) Marco Lovazzano"
     echo -e "Licensed under the GNU General Public License v3.0"
     echo -e "http://github.com/martcus"
+    echo -e ""
 }
 
 OPTS=$(getopt -o :d:v:f:h --long "help,version,verbosity:,file:,dateformat:" -n $LOG4SH_APPNAME -- "$@")
