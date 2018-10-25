@@ -14,12 +14,12 @@ source log4.sh [OPTIONS]
 
 ## log4sh
 Puoi usare le funzioni:
-* FATAL
-* ERROR
-* WARN
-* INFO
-* DEBUG
-* TRACE
+* FATAL [log text]
+* ERROR [log text]
+* WARN  [log text]
+* INFO  [log text]
+* DEBUG [log text]
+* TRACE [log text]
 Tutte accettano sia un singolo parametro DI input (ciò che si desidera stampare) sia un parametro IN input (tramite Pipe). Es:
 ```
 -	INFO “Hello World”
@@ -31,6 +31,7 @@ Stampano entrambe:
 ```
 La funzione:
 * SET_LEVEL [FATAL, ERROR, WARN, INFO, DEBUG, TRACE, OFF]
+
 permette di cambiare il livello di log durante l'esecuzione. Il parametro di input, obbligatorio, è il nuovo livello di logging.
 
 ### Nota
