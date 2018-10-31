@@ -5,6 +5,7 @@
 # Licensed under the GNU General Public License v3.0
 # http://github.com/martcus
 #--------------------------------------------------------------------------------------------------
+
 # Exit on error. Append "|| true" if you expect an error.
 set -o errexit
 # Exit on error inside any functions or subshells.
@@ -27,7 +28,7 @@ __base="$(basename ${__file} .sh)"
 __root="$(cd "$(dirname "${__dir}")" && pwd)" # <-- change this as it depends on your app
 
 # log4.sh inclusion
-source ../script/log4.sh -v TRACE -d +"%Y-%m-%d %H:%M:%S"
+source ../script/log4.sh -v TRACE -d +"%Y-%m-%d %H:%M:%S" -f $__base.$(date +%Y%m%d_%H%M%S).log
 
 DEBUG "__dir  = "$__dir
 DEBUG "__file = "$__file
@@ -35,32 +36,24 @@ DEBUG "__base = "$__base
 DEBUG "__root = "$__root
 
 echo -e ""
-#
-# Simple message
-#
-INFO "Standard log message"
 
-echo -e ""
-#
 # You can use level message
-#
-TRACE  "Sed lorem leo"
-DEBUG  "In ligula nunc, commodo et tincidunt ac"
-INFO "Integer purus neque, pharetra in mollis non, pretium vitae enim"
-WARN  "Proin eget enim elementum, molestie sem ac"
-ERROR "Praesent vehicula pharetra quam eget ultrices"
-FATAL "Lorem ipsum dolor sit amet, consectetur adipiscing"
+TRACE "Ultra-fine-grained informational events."
+DEBUG "Fine-grained informational events that are most useful to debug an application."
+INFO  "Informational messages that highlight the progress of the application at coarse-grained level."
+WARN  "Potentially harmful situations."
+ERROR "Error events that might still allow the application to continue running."
+FATAL "Very severe error events that will presumably lead the application to abort."
 
 echo -e ""
-#
-# Modify the date format
-#
-LOG_TIME_FMT="+%Y%m%d_%H:%M:%S%z"
-INFO "You can change the date format! WOW!"
+sleep 1
 
+# Modify the date format
+LOG_TIME_FMT="+%Y%m%d_%H:%M:%S%z"
+INFO "Change the date format: +%Y%m%d_%H:%M:%S%z"
 echo "Pipe data have the priority" 
-INFO "Hello World! -> CLASSIC MODE: 'INFO "Hello World!"'"
-echo "Hello" | INFO "World! -> PIPE MODE: 'echo "Hello" | INFO "World!"'"
+INFO "Hello World! -> Classic mode: 'INFO "Hello World!"'"
+echo "Hello" | INFO "World! -> Pipe mode priority: 'echo "Hello" | INFO "World!"'"
 
 # Restore IFS
 IFS=$SAVEIFS

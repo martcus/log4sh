@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 #--------------------------------------------------------------------------------------------------
-# Makes logging in Bash scripting easy
+# Makes logging in Bash scripting smart
 # Copyright (c) Marco Lovazzano
 # Licensed under the GNU General Public License v3.0
 # http://github.com/martcus
 #--------------------------------------------------------------------------------------------------
 LOG4SH_APPNAME="log4sh"
-LOG4SH_VERSION="2.1.0"
+LOG4SH_VERSION="2.2.0"
 
 # Internal function for logging
 function _log {
@@ -21,19 +21,17 @@ function _log {
         # if log date format is not defined, use the format "+%Y-%m-%d %H:%M:%S
         LOG_TIME_FMT=${LOG_TIME_FMT:="+%Y-%m-%d %H:%M:%S"}
         LOG_TIME=$(date "${LOG_TIME_FMT}")
-        LOG_FILE=${LOG_FILE:=""}
 
         # if log file is not defined, just echo the output
         if [ -z "$LOG_FILE" ]; then
             _compose "${LOG_TIME}" "${level}" "${context[@]}" "${text}"
         else
-            LOG=$LOG_FILE.$(date +%Y%m%d)
-            touch $LOG
-            if [ ! -f $LOG ]; then
-                _compose "${LOG_TIME}" "FATAL" "${context[@]}" "Cannot create log file $LOG. Exiting."
+            touch "$LOG_FILE"
+            if [ ! -f "$LOG_FILE" ]; then
+                _compose "${LOG_TIME}" "FATAL" "${context[@]}" "Cannot create log file $LOG_FILE. Exiting."
                 exit 1;
             fi
-            _compose "${LOG_TIME}" "${level}" "${context[@]}" "${text}" | tee -a $LOG;
+            _compose "${LOG_TIME}" "${level}" "${context[@]}" "${text}" | tee -a "$LOG_FILE";
         fi
     fi
 }
@@ -86,32 +84,36 @@ function _set_verbosity() {
 }
 
 function _usage() {
+    echo -e ""
     echo -e "$(basename $0) v$LOG4SH_VERSION"
     echo -e "Usage: $(basename $0) [OPTIONS]"
-    echo -e " -h , --help                    : Print this help"
-    echo -e " -v , --verbosity [LEVEL]       : Define the verbosity level. "
-    echo -e "                                  Levels are: FATAL < ERROR < WARNING < INFO < DEBUG < TRACE"
-    echo -e " -d , --dateformat [DATE FORMAT]: Set the date format. Refer to date command (man date)"
-    echo -e " -f , --file [FILE NAME]        : Set the log file name"
-    echo -e "      --version                 : Print version"
+    echo -e " -h , --help                     : Print this help"
+    echo -e " -v , --verbosity [LEVEL]        : Define the verbosity level. "
+    echo -e "                                   Levels are: FATAL < ERROR < WARNING < INFO < DEBUG < TRACE | OFF"
+    echo -e " -d , --dateformat [DATE FORMAT] : Set the date format. Refer to date command (man date)"
+    echo -e " -f , --file [FILE NAME]         : Set the log file name"
+    echo -e "      --version                  : Print version"
     echo -e ""
     echo -e "Exit status:"
     echo -e " 0  if OK,"
     echo -e " 1  if some problems (e.g., cannot access subdirectory)."
+    echo -e ""
 }
 
 function _version() {
+    echo -e ""
     echo -e "$(basename $0) v$LOG4SH_VERSION"
     echo -e "Makes logging in Bash scripting smart"
     echo -e "Copyright (c) Marco Lovazzano"
     echo -e "Licensed under the GNU General Public License v3.0"
     echo -e "http://github.com/martcus"
+    echo -e ""
 }
 
 OPTS=$(getopt -o :d:v:f:h --long "help,version,verbosity:,file:,dateformat:" -n $LOG4SH_APPNAME -- "$@")
-
+OPTS_EXITCODE=$?
 #Bad arguments, something has gone wrong with the getopt command.
-if [ $? -ne 0 ]; then
+if [ $OPTS_EXITCODE -ne 0 ]; then
     #Option not allowed
     echo -e "Error: '$(basename $0)' invalid option '$1'."
     echo -e "Try '$(basename $0) -h' for more information."
@@ -134,18 +136,18 @@ while true; do
             shift 2;;
         -d|--dateformat) #Date format
             date "$2" > /dev/null 2>&1
-            if [ ! $? -eq 0 ]; then
+			DATE_EXITCODE=$?
+            if [ ! $DATE_EXITCODE -eq 0 ]; then
                 echo "Error: '$0' '-d $2' is not a valid date format. Refer to date command (man date)"
                 exit 1
             fi
             LOG_TIME_FMT=$2
             shift 2;;
         -f|--file) #Print to file
-            LOG_FILE=$2
+			LOG_FILE="$2"
             shift 2;;
         --)
             shift
             break;;
     esac
 done
-
