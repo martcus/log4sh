@@ -6,7 +6,7 @@
 # http://github.com/martcus
 #--------------------------------------------------------------------------------------------------
 LOG4SH_APPNAME="log4sh"
-LOG4SH_VERSION="2.1.1"
+LOG4SH_VERSION="2.2.0"
 
 # Internal function for logging
 function _log {
@@ -21,19 +21,17 @@ function _log {
         # if log date format is not defined, use the format "+%Y-%m-%d %H:%M:%S
         LOG_TIME_FMT=${LOG_TIME_FMT:="+%Y-%m-%d %H:%M:%S"}
         LOG_TIME=$(date "${LOG_TIME_FMT}")
-        LOG_FILE=${LOG_FILE:=""}
 
         # if log file is not defined, just echo the output
         if [ -z "$LOG_FILE" ]; then
             _compose "${LOG_TIME}" "${level}" "${context[@]}" "${text}"
         else
-            LOG=$LOG_FILE.$(date +%Y%m%d)
-            touch $LOG
-            if [ ! -f $LOG ]; then
-                _compose "${LOG_TIME}" "FATAL" "${context[@]}" "Cannot create log file $LOG. Exiting."
+            touch "$LOG_FILE"
+            if [ ! -f "$LOG_FILE" ]; then
+                _compose "${LOG_TIME}" "FATAL" "${context[@]}" "Cannot create log file $LOG_FILE. Exiting."
                 exit 1;
             fi
-            _compose "${LOG_TIME}" "${level}" "${context[@]}" "${text}" | tee -a $LOG;
+            _compose "${LOG_TIME}" "${level}" "${context[@]}" "${text}" | tee -a "$LOG_FILE";
         fi
     fi
 }
@@ -113,9 +111,9 @@ function _version() {
 }
 
 OPTS=$(getopt -o :d:v:f:h --long "help,version,verbosity:,file:,dateformat:" -n $LOG4SH_APPNAME -- "$@")
-
+OPTS_EXITCODE=$?
 #Bad arguments, something has gone wrong with the getopt command.
-if [ $? -ne 0 ]; then
+if [ $OPTS_EXITCODE -ne 0 ]; then
     #Option not allowed
     echo -e "Error: '$(basename $0)' invalid option '$1'."
     echo -e "Try '$(basename $0) -h' for more information."
@@ -138,18 +136,18 @@ while true; do
             shift 2;;
         -d|--dateformat) #Date format
             date "$2" > /dev/null 2>&1
-            if [ ! $? -eq 0 ]; then
+			DATE_EXITCODE=$?
+            if [ ! $DATE_EXITCODE -eq 0 ]; then
                 echo "Error: '$0' '-d $2' is not a valid date format. Refer to date command (man date)"
                 exit 1
             fi
             LOG_TIME_FMT=$2
             shift 2;;
         -f|--file) #Print to file
-            LOG_FILE=$2
+			LOG_FILE="$2"
             shift 2;;
         --)
             shift
             break;;
     esac
 done
-

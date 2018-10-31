@@ -28,17 +28,22 @@ __base="$(basename ${__file} .sh)"
 __root="$(cd "$(dirname "${__dir}")" && pwd)" # <-- change this as it depends on your app
 
 # log4.sh inclusion
-source log4.sh -v INFO -d "+%Y-%m-%d %H:%M:%S" # use -f $__file for log
+source log4.sh -v INFO -d "+%Y-%m-%d %H:%M:%S" # use -f $__base.$(date +%Y%m%d_%H%M%S).log
 
-DEBUG "__dir  = "$__dir
-DEBUG "__file = "$__file
-DEBUG "__base = "$__base
-DEBUG "__root = "$__root
+DEBUG "__dir  = $__dir"
+DEBUG "__file = $__file"
+DEBUG "__base = $__base"
+DEBUG "__root = $__root"
 
 # --> function
 
 # --> Some script here
-INFO "Hello World!"
+TRACE "Ultra-fine-grained informational events."
+DEBUG "Fine-grained informational events that are most useful to debug an application."
+INFO  "Informational messages that highlight the progress of the application at coarse-grained level."
+WARN  "Potentially harmful situations."
+ERROR "Error events that might still allow the application to continue running."
+FATAL "Very severe error events that will presumably lead the application to abort."
 
 # Restore IFS
 IFS=$SAVEIFS
