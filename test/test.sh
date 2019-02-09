@@ -46,6 +46,7 @@ ERROR "Error events that might still allow the application to continue running."
 FATAL "Very severe error events that will presumably lead the application to abort."
 
 echo -e ""
+echo -e "sleeping..."
 sleep 1
 
 # Modify the date format

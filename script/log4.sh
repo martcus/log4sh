@@ -6,7 +6,7 @@
 # http://github.com/martcus
 #--------------------------------------------------------------------------------------------------
 LOG4SH_APPNAME="log4sh"
-LOG4SH_VERSION="2.2.1"
+LOG4SH_VERSION="2.3.0"
 
 # Internal function for logging
 function _log {
@@ -92,6 +92,7 @@ function _usage() {
     echo -e "                                   Levels are: FATAL < ERROR < WARNING < INFO < DEBUG < TRACE | OFF"
     echo -e " -d , --dateformat [DATE FORMAT] : Set the date format. Refer to date command (man date)"
     echo -e " -f , --file [FILE NAME]         : Set the log file name"
+    echo -e " -i , --install                  : Auto install log4sh in /usr/bin/. Current user must be a sudoers"
     echo -e "      --version                  : Print version"
     echo -e ""
     echo -e "Exit status:"
@@ -110,7 +111,15 @@ function _version() {
     echo -e ""
 }
 
-OPTS=$(getopt -o :d:v:f:h --long "help,version,verbosity:,file:,dateformat:" -n $LOG4SH_APPNAME -- "$@")
+function _install() {
+    wd=$(pwd)
+    basename "$(test -L "$0" && readlink "$0" || echo "$0")" > /tmp/log4sh_tmp
+    scriptname=$(echo -e -n $wd/ && cat /tmp/log4sh_tmp)
+    sudo cp $scriptname /usr/bin/log4sh && echo "Congratulations! log4sh Installed!" || echo "Installation failed"
+    rm /tmp/log4sh_tmp
+}
+
+OPTS=$(getopt -o :d:v:f:h:i --long "help,version,verbosity:,file:,dateformat:,install" -n $LOG4SH_APPNAME -- "$@")
 OPTS_EXITCODE=$?
 #Bad arguments, something has gone wrong with the getopt command.
 if [ $OPTS_EXITCODE -ne 0 ]; then
@@ -144,8 +153,11 @@ while true; do
             LOG_TIME_FMT=$2
             shift 2;;
         -f|--file) #Print to file
-        LOG_FILE="$2"
+            LOG_FILE="$2"
             shift 2;;
+        -i|--install) #auto install
+            _install
+            shift;;
         --)
             shift
             break;;

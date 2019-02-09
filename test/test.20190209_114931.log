@@ -1,0 +1,13 @@
+2019-02-09 11:49:31 DEBUG __dir  = /home/marco/git/log4sh/test 
+2019-02-09 11:49:31 DEBUG __file = /home/marco/git/log4sh/test/test.sh 
+2019-02-09 11:49:31 DEBUG __base = test 
+2019-02-09 11:49:31 DEBUG __root = /home/marco/git/log4sh 
+2019-02-09 11:49:31 TRACE Ultra-fine-grained informational events. 
+2019-02-09 11:49:31 DEBUG Fine-grained informational events that are most useful to debug an application. 
+2019-02-09 11:49:31 INFO  Informational messages that highlight the progress of the application at coarse-grained level. 
+2019-02-09 11:49:31 WARN  Potentially harmful situations. 
+2019-02-09 11:49:31 ERROR Error events that might still allow the application to continue running. 
+2019-02-09 11:49:32 FATAL Very severe error events that will presumably lead the application to abort. 
+20190209_11:49:33+0100 INFO  Change the date format: +%Y%m%d_%H:%M:%S%z 
+20190209_11:49:33+0100 INFO  Hello World! -> Classic mode: 'INFO Hello 
+20190209_11:49:33+0100 INFO  Hello World! -> Pipe mode priority: 'echo Hello | INFO World!' 
