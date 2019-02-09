@@ -77,9 +77,9 @@ function _set_verbosity() {
         DEBUG)   verbosity=$debug_lvl   ;;
         TRACE)   verbosity=$trace_lvl   ;;
         *)
-			echo -e "Error: '$0' invalid option '$1'."
-			echo -e "Try '$0 -h' for more information."
-			exit 1
+            echo -e "Error: '$0' invalid option '$1'."
+            echo -e "Try '$0 -h' for more information."
+            exit 1
     esac
 }
 
@@ -136,7 +136,7 @@ while true; do
             shift 2;;
         -d|--dateformat) #Date format
             date "$2" > /dev/null 2>&1
-			DATE_EXITCODE=$?
+        DATE_EXITCODE=$?
             if [ ! $DATE_EXITCODE -eq 0 ]; then
                 echo "Error: '$0' '-d $2' is not a valid date format. Refer to date command (man date)"
                 exit 1
@@ -144,7 +144,7 @@ while true; do
             LOG_TIME_FMT=$2
             shift 2;;
         -f|--file) #Print to file
-			LOG_FILE="$2"
+        LOG_FILE="$2"
             shift 2;;
         --)
             shift
