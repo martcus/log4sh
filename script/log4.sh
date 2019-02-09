@@ -6,13 +6,14 @@
 # http://github.com/martcus
 #--------------------------------------------------------------------------------------------------
 LOG4SH_APPNAME="log4sh"
-LOG4SH_VERSION="2.2.0"
+LOG4SH_VERSION="2.2.1"
 
 # Internal function for logging
 function _log {
+    local verb_lvl=${1:-}
     if [ $verb_lvl -le $verbosity ]; then
-        local level=${1:-}
-        local text=${2:-}
+        local level=${2:-}
+        local text=${3:-}
 
         if [ ! -t 0 ]; then
             text=$(cat)" "${text}
@@ -48,22 +49,21 @@ function _compose() {
 
 # Log function and verbosity levels
 off_lvl=0
-fatal_lvl=1
-error_lvl=2
-warning_lvl=3
-info_lvl=4
-debug_lvl=5
-trace_lvl=6
+fatal_lvl=100
+error_lvl=200
+warning_lvl=300
+info_lvl=400
+debug_lvl=500
+trace_lvl=600
 
-verb_lvl=${verb_lvl:=$info_lvl}
 verbosity=${verbosity:=$info_lvl}
 
-function FATAL()  { verb_lvl=$fatal_lvl   _log "FATAL" "$@" ;}
-function ERROR()  { verb_lvl=$error_lvl   _log "ERROR" "$@" ;}
-function WARN()   { verb_lvl=$warning_lvl _log "WARN " "$@" ;}
-function INFO()   { verb_lvl=$info_lvl    _log "INFO " "$@" ;}
-function DEBUG()  { verb_lvl=$debug_lvl   _log "DEBUG" "$@" ;}
-function TRACE()  { verb_lvl=$trace_lvl   _log "TRACE" "$@" ;}
+function FATAL()     { _log $fatal_lvl "FATAL" "$@" ;}
+function ERROR()     {  _log $error_lvl "ERROR" "$@" ;}
+function WARN()      { _log $warning_lvl "WARN " "$@" ;}
+function INFO()      { _log $info_lvl "INFO " "$@" ;}
+function DEBUG()     { _log $debug_lvl "DEBUG" "$@" ;}
+function TRACE()     { _log $trace_lvl "TRACE" "$@" ;}
 function SET_LEVEL() { _set_verbosity "$1" ;}
 
 # Options command
@@ -136,7 +136,7 @@ while true; do
             shift 2;;
         -d|--dateformat) #Date format
             date "$2" > /dev/null 2>&1
-        DATE_EXITCODE=$?
+            DATE_EXITCODE=$?
             if [ ! $DATE_EXITCODE -eq 0 ]; then
                 echo "Error: '$0' '-d $2' is not a valid date format. Refer to date command (man date)"
                 exit 1
