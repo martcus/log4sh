@@ -35,6 +35,10 @@ DEBUG "__file = "$__file
 DEBUG "__base = "$__base
 DEBUG "__root = "$__root
 
+function test_log_func() {
+    ERROR ["$0":"$FUNCNAME":"$LINENO"] Test log function
+}
+
 echo -e ""
 
 # You can use level message
@@ -47,14 +51,21 @@ FATAL "Very severe error events that will presumably lead the application to abo
 
 echo -e ""
 echo -e "sleeping..."
+echo -e ""
 sleep 1
 
 # Modify the date format
-LOG_TIME_FMT="+%Y%m%d_%H:%M:%S%z"
+SET_TIME_FORMAT "+%Y%m%d_%H:%M:%S%z"
 INFO "Change the date format: +%Y%m%d_%H:%M:%S%z"
 echo "Pipe data have the priority" 
 INFO "Hello World! -> Classic mode: 'INFO "Hello World!"'"
-echo "Hello" | INFO "World! -> Pipe mode priority: 'echo "Hello" | INFO "World!"'"
+echo "Hello" | INFO "from the Pipe World! -> Pipe mode priority: 'echo "Hello" | INFO "World!"'"
+
+SET_LEVEL ERROR
+SET_TIME_FORMAT "+%Y-%m-%d %H:%M:%S"
+INFO "This message will not be printed!"
+ERROR "This message WILL be printed!"
+test_log_func
 
 # Restore IFS
 IFS=$SAVEIFS
