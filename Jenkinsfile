@@ -1,9 +1,9 @@
 pipeline {
   agent any
   stages {
-    stage('shellcheck') {
+    stage('') {
       steps {
-        sh 'shellcheck log4.sh'
+        echo 'Hello World!'
       }
     }
   }
