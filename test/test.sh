@@ -28,7 +28,7 @@ __base="$(basename ${__file} .sh)"
 __root="$(cd "$(dirname "${__dir}")" && pwd)" # <-- change this as it depends on your app
 
 # log4.sh inclusion
-source ../script/log4.sh -v TRACE -d +"%Y-%m-%d %H:%M:%S" -f $__base.$(date +%Y%m%d_%H%M%S).log
+source ./script/log4.sh -v TRACE -d +"%Y-%m-%d %H:%M:%S" -f $__base.$(date +%Y%m%d_%H%M%S).log
 
 DEBUG "__dir  = "$__dir
 DEBUG "__file = "$__file
