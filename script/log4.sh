@@ -48,8 +48,8 @@ function _log {
                 exit 1;
             fi
             _compose "${log_time}" "${level}" "${text}" | tee -a "$LOG_FILE";
-            fi
         fi
+    fi
 }
 
 # internal function - compose the log message
@@ -78,15 +78,14 @@ readonly trace_lvl=600
 verbosity=${verbosity:=$info_lvl}
 
 # log functions
-function FATAL()      { _log $fatal_lvl "FATAL" "$@" ;}
-function ERROR()      { _log $error_lvl "ERROR" "$@" ;}
-function WARN()       { _log $warning_lvl "WARN " "$@" ;}
-function INFO()       { _log $info_lvl "INFO " "$@" ;}
-function DEBUG()      { _log $debug_lvl "DEBUG" "$@" ;}
-function TRACE()      { _log $trace_lvl "TRACE" "$@" ;}
-
+function FATAL() { _log $fatal_lvl "FATAL" "$@" ;  }
+function ERROR() { _log $error_lvl "ERROR" "$@" ;  }
+function WARN()  { _log $warning_lvl "WARN " "$@" ;}
+function INFO()  { _log $info_lvl "INFO " "$@" ;   }
+function DEBUG() { _log $debug_lvl "DEBUG" "$@" ;  }
+function TRACE() { _log $trace_lvl "TRACE" "$@" ;  }
 # config functions
-function SET_LEVEL()  { _set_verbosity "$1" ;}
+function SET_LEVEL() { _set_verbosity "$1" ;}
 function SET_TIME_FORMAT() { LOG_TIME_FMT="$1" ;}
 
 # internal function - set verbosity level
