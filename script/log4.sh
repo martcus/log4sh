@@ -5,9 +5,9 @@
 # Licensed under the GNU General Public License v3.0
 # http://github.com/martcus
 #--------------------------------------------------------------------------------------------------
-LOG4SH_APPNAME="log4sh"
-LOG4SH_VERSION="2.4.0"
-LOG4SH_BASENAME=$(basename "$0")
+readonly LOG4SH_APPNAME="log4sh"
+readonly LOG4SH_VERSION="2.4.1"
+readonly LOG4SH_BASENAME=$(basename "$0")
 
 LOG_TIME_FMT=""
 LOG_FILE=""
