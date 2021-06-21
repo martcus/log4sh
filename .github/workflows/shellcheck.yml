@@ -33,3 +33,5 @@ jobs:
       # Runs shellcheck
       - name: Run ShellCheck
         uses: ludeeus/action-shellcheck@master
+        with:
+          ignore: test
