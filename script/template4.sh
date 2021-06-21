@@ -24,10 +24,11 @@ IFS=$(echo -en "\n\b") # <-- change this as it depends on your app
 # Set magic variables for current file & dir
 __dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 __file="${__dir}/$(basename "${BASH_SOURCE[0]}")"
-__base="$(basename ${__file} .sh)"
+__base="$(basename "${__file}".sh)"
 __root="$(cd "$(dirname "${__dir}")" && pwd)" # <-- change this as it depends on your app
 
 # log4.sh inclusion
+# shellcheck disable=SC1091
 source ./log4.sh -v TRACE #-d "+%Y-%m-%d %H:%M:%S" # use -f $__base.$(date +%Y%m%d_%H%M%S).log
 
 DEBUG "__dir  = $__dir"
