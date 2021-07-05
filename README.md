@@ -43,4 +43,3 @@ Un esempio classico nel caso tu desideri inserire lo script nella directory bin 
 ```
 PATH=$PATH:~/bin
 ```
-
