@@ -1,4 +1,4 @@
-# log4.sh
+# log4.sh [![Shellcheck](https://github.com/martcus/log4sh/actions/workflows/shellcheck.yml/badge.svg)](https://github.com/martcus/log4sh/actions/workflows/shellcheck.yml)
 Log for shell (aka log4.sh): Makes logging in shell scripting easy
 
 ### How to Include log4.sh
