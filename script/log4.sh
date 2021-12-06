@@ -6,12 +6,12 @@
 # http://github.com/martcus
 #--------------------------------------------------------------------------------------------------
 LOG4SH_APPNAME="log4sh"
-LOG4SH_VERSION="2.4.1"
+LOG4SH_VERSION="2.4.2"
 LOG4SH_BASENAME=$(basename "$0")
 
 readonly LOG4SH_VERSION
 readonly LOG4SH_APPNAME
-readonly LOG4SH_BASENAME 
+readonly LOG4SH_BASENAME
 
 LOG_TIME_FMT=""
 LOG_FILE=""
@@ -41,7 +41,7 @@ function _log {
             LOG_TIME_FMT=${LOG_TIME_FMT:="+%Y-%m-%d %H:%M:%S"}
         fi
         log_time=$(date "${LOG_TIME_FMT}")
-        
+
         # if log file is not defined, just echo the output
         if [ -z "$LOG_FILE" ]; then
             _compose "${log_time}" "${level}" "${text}"
@@ -111,10 +111,18 @@ function _set_verbosity() {
     esac
 }
 
+function _logo() {
+    echo -e "   __          ____     __  "
+    echo -e "  / /__  ___ _/ / /___ / / "
+    echo -e " / / _ \/ _ \`/_  _(_-</ _ \\"
+    echo -e "/_/\___/\_, / /_//___/_//_/"
+    echo -e "       /___/          $LOG4SH_VERSION"
+    echo -e ""
+}
+
 # internal function - print help page
 function _usage() {
-    echo -e ""
-    echo -e "$LOG4SH_BASENAME $LOG4SH_VERSION"
+    _logo
     echo -e "Usage: $LOG4SH_BASENAME [OPTIONS]"
     echo -e " -h , --help                     : Print this help"
     echo -e " -v , --verbosity [LEVEL]        : Define the verbosity level. "
@@ -132,8 +140,7 @@ function _usage() {
 
 # internal function - print version
 function _version() {
-    echo -e ""
-    echo -e "$LOG4SH_BASENAME v$LOG4SH_VERSION"
+    _logo
     echo -e "Makes logging in Bash scripting smart"
     echo -e "Copyright (c) Marco Lovazzano"
     echo -e "Licensed under the GNU General Public License v3.0"
