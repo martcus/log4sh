@@ -16,6 +16,10 @@ readonly LOG4SH_BASENAME
 LOG_TIME_FMT=""
 LOG_FILE=""
 
+_print() {
+    printf "%s\n" "$1"
+}
+
 # internal function - logging
 # params:
 # [1] verbosity level
@@ -66,7 +70,7 @@ _compose() {
     compose_level=${2:-}
     compose_text=${3:-}
 
-    echo -e "${compose_time} ${compose_level} ${compose_text}";
+    _print "${compose_time} ${compose_level} ${compose_text}";
 }
 
 # verbosity level constant
@@ -105,54 +109,54 @@ _set_verbosity() {
         DEBUG)   verbosity=$debug_lvl   ;;
         TRACE)   verbosity=$trace_lvl   ;;
         *)
-            echo -e "Error: '$0' invalid option '$1'."
-            echo -e "Try '$0 -h' for more information."
+            _print "Error: '$0' invalid option '$1'."
+            _print "Try '$0 -h' for more information."
             exit 1
     esac
 }
 
 _logo() {
-    echo -e "   __          ____     __  "
-    echo -e "  / /__  ___ _/ / /___ / / "
-    echo -e " / / _ \/ _ \`/_  _(_-</ _ \\"
-    echo -e "/_/\___/\_, / /_//___/_//_/"
-    echo -e "       /___/          $LOG4SH_VERSION"
-    echo -e ""
+    _print "   __          ____     __  "
+    _print "  / /__  ___ _/ / /___ / / "
+    _print " / / _ \/ _ \`/_  _(_-</ _ \\"
+    _print "/_/\___/\_, / /_//___/_//_/"
+    _print "       /___/          $LOG4SH_VERSION"
+    _print ""
 }
 
 # internal function - print help page
 _usage() {
     _logo
-    echo -e "Usage: $LOG4SH_BASENAME [OPTIONS]"
-    echo -e " -h , --help                     : Print this help"
-    echo -e " -v , --verbosity [LEVEL]        : Define the verbosity level. "
-    echo -e "                                   Levels are: FATAL < ERROR < WARNING < INFO < DEBUG < TRACE | OFF"
-    echo -e " -d , --dateformat [DATE FORMAT] : Set the date format. Refer to date command (man date)"
-    echo -e " -f , --file [FILE NAME]         : Set the log file name"
-    echo -e " -i , --install                  : Auto install log4sh in /usr/bin/. Current user must be a sudoers"
-    echo -e "      --version                  : Print version"
-    echo -e ""
-    echo -e "Exit status:"
-    echo -e " 0  if OK,"
-    echo -e " 1  if some problems (e.g., cannot access subdirectory)."
-    echo -e ""
+    _print "Usage: $LOG4SH_BASENAME [OPTIONS]"
+    _print " -h , --help                     : Print this help"
+    _print " -v , --verbosity [LEVEL]        : Define the verbosity level. "
+    _print "                                   Levels are: FATAL < ERROR < WARNING < INFO < DEBUG < TRACE | OFF"
+    _print " -d , --dateformat [DATE FORMAT] : Set the date format. Refer to date command (man date)"
+    _print " -f , --file [FILE NAME]         : Set the log file name"
+    _print " -i , --install                  : Auto install log4sh in /usr/bin/. Current user must be a sudoers"
+    _print "      --version                  : Print version"
+    _print ""
+    _print "Exit status:"
+    _print " 0  if OK,"
+    _print " 1  if some problems (e.g., cannot access subdirectory)."
+    _print ""
 }
 
 # internal function - print version
 _version() {
     _logo
-    echo -e "Makes logging in Bash scripting smart"
-    echo -e "Copyright (c) Marco Lovazzano"
-    echo -e "Licensed under the GNU General Public License v3.0"
-    echo -e "http://github.com/martcus"
-    echo -e ""
+    _print "Makes logging in Bash scripting smart"
+    _print "Copyright (c) Marco Lovazzano"
+    _print "Licensed under the GNU General Public License v3.0"
+    _print "http://github.com/martcus"
+    _print ""
 }
 
 # internal function - auto install function
 _install() {
     wd=$(pwd)
     basename "$(test -L "$0" && readlink "$0" || echo "$0")" > /tmp/log4sh_tmp
-    scriptname=$(echo -e -n "$wd"/ && cat /tmp/log4sh_tmp)
+    scriptname=$(_print -n "$wd"/ && cat /tmp/log4sh_tmp)
     sudo cp "$scriptname" /usr/bin/log4sh && echo "Congratulations! log4sh Installed!" || echo "Installation failed"
     rm /tmp/log4sh_tmp
 }
@@ -162,8 +166,8 @@ OPTS_EXITCODE=$?
 # bad arguments, something has gone wrong with the getopt command.
 if [ $OPTS_EXITCODE -ne 0 ]; then
     # Option not allowed
-    echo -e "Error: '$LOG4SH_BASENAME' invalid option '$1'."
-    echo -e "Try '$LOG4SH_BASENAME -h' for more information."
+    _print "Error: '$LOG4SH_BASENAME' invalid option '$1'."
+    _print "Try '$LOG4SH_BASENAME -h' for more information."
     exit 1
 fi
 
