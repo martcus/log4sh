@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/usr/bin/env sh
 #--------------------------------------------------------------------------------------------------
 # Makes logging in Bash scripting smart
 # Copyright (c) Marco Lovazzano
@@ -21,19 +21,19 @@ LOG_FILE=""
 # [1] verbosity level
 # [2] level description
 # [3+] log text
-function _log {
-    local verb_lvl=${1:-}; shift
-    if [ "$verb_lvl" -le "$verbosity" ]; then
-        local level=${1:-}; shift
+_log() {
+    log_verb_lvl=${1:-}; shift
+    if [ "$log_verb_lvl" -le "$verbosity" ]; then
+        log_level=${1:-}; shift
         # build log text from params
-        local text="";
+        log_text="";
         for var in "$@"; do
-            text=$text" "$var
+            log_text=$log_text" "$var
         done
 
         # enable pipe use
         if [ ! -t 0 ]; then
-            text=$(cat)" "${text}
+            log_text=$(cat)" "${log_text}
         fi
 
         # if log date format is not defined, use the format "+%Y-%m-%d %H:%M:%S
@@ -44,14 +44,14 @@ function _log {
 
         # if log file is not defined, just echo the output
         if [ -z "$LOG_FILE" ]; then
-            _compose "${log_time}" "${level}" "${text}"
+            _compose "${log_time}" "${log_level}" "${log_text}"
         else
             touch "$LOG_FILE"
             if [ ! -f "$LOG_FILE" ]; then
                 _compose "${log_time}" "FATAL Cannot create log file $LOG_FILE. Exiting."
                 exit 1;
             fi
-            _compose "${log_time}" "${level}" "${text}" | tee -a "$LOG_FILE";
+            _compose "${log_time}" "${log_level}" "${log_text}" | tee -a "$LOG_FILE";
         fi
     fi
 }
@@ -61,12 +61,12 @@ function _log {
 # [1] time
 # [2] level
 # [3] text
-function _compose() {
-    local ltime=${1:-}
-    local level=${2:-}
-    local text=${3:-}
+_compose() {
+    compose_time=${1:-}
+    compose_level=${2:-}
+    compose_text=${3:-}
 
-    echo -e "${ltime} ${level} ${text}";
+    echo -e "${compose_time} ${compose_level} ${compose_text}";
 }
 
 # verbosity level constant
@@ -82,20 +82,20 @@ readonly trace_lvl=600
 verbosity=${verbosity:=$info_lvl}
 
 # log functions
-function FATAL() { _log $fatal_lvl "FATAL" "$@" ;  }
-function ERROR() { _log $error_lvl "ERROR" "$@" ;  }
-function WARN()  { _log $warning_lvl "WARN " "$@" ;}
-function INFO()  { _log $info_lvl "INFO " "$@" ;   }
-function DEBUG() { _log $debug_lvl "DEBUG" "$@" ;  }
-function TRACE() { _log $trace_lvl "TRACE" "$@" ;  }
+FATAL() { _log $fatal_lvl "FATAL" "$@" ;  }
+ERROR() { _log $error_lvl "ERROR" "$@" ;  }
+WARN()  { _log $warning_lvl "WARN " "$@" ;}
+INFO()  { _log $info_lvl "INFO " "$@" ;   }
+DEBUG() { _log $debug_lvl "DEBUG" "$@" ;  }
+TRACE() { _log $trace_lvl "TRACE" "$@" ;  }
 # config functions
-function SET_LEVEL() { _set_verbosity "$1" ;}
-function SET_TIME_FORMAT() { LOG_TIME_FMT="$1" ;}
+SET_LEVEL() { _set_verbosity "$1" ;}
+SET_TIME_FORMAT() { LOG_TIME_FMT="$1" ;}
 
 # internal function - set verbosity level
 # params:
 # [1] verbosity level
-function _set_verbosity() {
+_set_verbosity() {
     case $1 in
         OFF)     verbosity=$off_lvl     ;;
         FATAL)   verbosity=$fatal_lvl   ;;
@@ -111,7 +111,7 @@ function _set_verbosity() {
     esac
 }
 
-function _logo() {
+_logo() {
     echo -e "   __          ____     __  "
     echo -e "  / /__  ___ _/ / /___ / / "
     echo -e " / / _ \/ _ \`/_  _(_-</ _ \\"
@@ -121,7 +121,7 @@ function _logo() {
 }
 
 # internal function - print help page
-function _usage() {
+_usage() {
     _logo
     echo -e "Usage: $LOG4SH_BASENAME [OPTIONS]"
     echo -e " -h , --help                     : Print this help"
@@ -139,7 +139,7 @@ function _usage() {
 }
 
 # internal function - print version
-function _version() {
+_version() {
     _logo
     echo -e "Makes logging in Bash scripting smart"
     echo -e "Copyright (c) Marco Lovazzano"
@@ -149,7 +149,7 @@ function _version() {
 }
 
 # internal function - auto install function
-function _install() {
+_install() {
     wd=$(pwd)
     basename "$(test -L "$0" && readlink "$0" || echo "$0")" > /tmp/log4sh_tmp
     scriptname=$(echo -e -n "$wd"/ && cat /tmp/log4sh_tmp)
