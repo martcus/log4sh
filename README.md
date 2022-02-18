@@ -13,33 +13,39 @@ source log4.sh [OPTIONS]
 * test-log4.sh: testing script
 
 ## log4sh
-Puoi usare le funzioni:
+You can use this functions:
 * FATAL [log text]
 * ERROR [log text]
 * WARN  [log text]
 * INFO  [log text]
 * DEBUG [log text]
 * TRACE [log text]
-Tutte accettano sia un singolo parametro DI input (ciò che si desidera stampare) sia un parametro IN input (tramite Pipe). Es:
+
 ```
 -	INFO “Hello World”
 -	echo “Hello” | INFO “World” #stampa prima la pipe poi l’argomento
 ```
-Stampano entrambe:
+
+They both "print"
+
 ```
 20180808_15:07:33+0200 INFO    Hello World
 ```
-La funzione:
+
+The function:
 * SET_LEVEL [FATAL, ERROR, WARN, INFO, DEBUG, TRACE, OFF]
 
-permette di cambiare il livello di log durante l'esecuzione. Il parametro di input, obbligatorio, è il nuovo livello di logging.
+allows you to change the logging level at runtime. The input parameter, which is mandatory, is the new logging level.
 
-### Nota
-Potete includere nel vostro path lo script tramite il seguente snipper:
+### Notes
+You can include the script in your path via the following snippet:
+
 ```
 PATH=$PATH:[your bin dir]. 
 ```
-Un esempio classico nel caso tu desideri inserire lo script nella directory bin della home del tuo user:
+
+A classic example in case you want to put the script in the bin directory of your user's home:
+
 ```
 PATH=$PATH:~/bin
 ```
