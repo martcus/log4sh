@@ -26,10 +26,14 @@ function _log {
     if [ "$verb_lvl" -le "$verbosity" ]; then
         local level=${1:-}; shift
         # build log text from params
-        local text="";
-        for var in "$@"; do
-            text=$text" "$var
-        done
+        local text=""
+        if [ "$#" -gt 0 ]; then
+            text="$1"
+            shift
+            for var in "$@"; do
+                text="$text $var"
+            done
+        fi
 
         # enable pipe use
         if [ ! -t 0 ]; then
@@ -66,7 +70,7 @@ function _compose() {
     local level=${2:-}
     local text=${3:-}
 
-    echo -e "${ltime} ${level} ${text}";
+    echo -e "${ltime} ${level}${text}";
 }
 
 # verbosity level constant
@@ -84,8 +88,8 @@ verbosity=${verbosity:=$info_lvl}
 # log functions
 function FATAL() { _log $fatal_lvl "FATAL" "$@" ;  }
 function ERROR() { _log $error_lvl "ERROR" "$@" ;  }
-function WARN()  { _log $warning_lvl "WARN " "$@" ;}
-function INFO()  { _log $info_lvl "INFO " "$@" ;   }
+function WARN()  { _log $warning_lvl "WARN" "$@" ;}
+function INFO()  { _log $info_lvl "INFO" "$@" ;   }
 function DEBUG() { _log $debug_lvl "DEBUG" "$@" ;  }
 function TRACE() { _log $trace_lvl "TRACE" "$@" ;  }
 # config functions
